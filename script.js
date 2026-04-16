@@ -30,6 +30,7 @@ let flapProgress = 0;
 let seamTotalLength = 0;
 let peekSyncRaf = null;
 let peekSyncUntil = 0;
+let peekAnchorIntervalId = null;
 
 function distanceToSegment(px, py, x1, y1, x2, y2) {
   const dx = x2 - x1;
@@ -104,6 +105,13 @@ function runPeekAnchorSync(durationMs) {
   peekSyncRaf = requestAnimationFrame(tick);
 }
 
+function startContinuousPeekAnchorSync() {
+  if (peekAnchorIntervalId !== null) return;
+  peekAnchorIntervalId = window.setInterval(() => {
+    updatePeekabooTarget();
+  }, 160);
+}
+
 function setInstruction(text) {
   instruction.textContent = text;
 }
@@ -134,6 +142,7 @@ function completeFlapLift() {
     window.setTimeout(() => {
       updatePeekabooTarget();
       scene.classList.add("peekaboo-active");
+      startContinuousPeekAnchorSync();
     }, 3000);
     setInstruction("Happy Birthday, Mom.");
     phase = PHASE.DONE;
