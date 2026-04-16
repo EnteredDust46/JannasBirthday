@@ -6,6 +6,7 @@ const seamProgress = document.getElementById("seamProgress");
 const scene = document.getElementById("scene");
 const card = document.getElementById("card");
 const peekabooImage = document.getElementById("peekabooImage");
+const peekabooLane = document.getElementById("peekabooLane");
 const envelopeBody = document.getElementById("envelopeBody");
 
 const PHASE = {
@@ -75,7 +76,7 @@ function setSeamProgress(value) {
 }
 
 function updatePeekabooTarget() {
-  if (!scene || !card || !peekabooImage) return;
+  if (!scene || !card || !peekabooImage || !peekabooLane) return;
   const sceneRect = scene.getBoundingClientRect();
   const cardRect = card.getBoundingClientRect();
   const anchorFromSceneTop = cardRect.bottom - sceneRect.top;
