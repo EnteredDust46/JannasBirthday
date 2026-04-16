@@ -31,6 +31,7 @@ let seamTotalLength = 0;
 let peekSyncRaf = null;
 let peekSyncUntil = 0;
 let peekAnchorIntervalId = null;
+let cardResizeObserver = null;
 
 function distanceToSegment(px, py, x1, y1, x2, y2) {
   const dx = x2 - x1;
@@ -80,10 +81,12 @@ function setSeamProgress(value) {
 
 function updatePeekabooTarget() {
   if (!scene || !card || !peekabooImage || !peekabooLane) return;
-  const envelopeRect = envelope.getBoundingClientRect();
+  const sceneRect = scene.getBoundingClientRect();
   const cardRect = card.getBoundingClientRect();
-  const anchorFromEnvelopeTop = cardRect.bottom - envelopeRect.top;
-  peekabooLane.style.top = `${anchorFromEnvelopeTop}px`;
+  const anchorFromSceneTop = cardRect.bottom - sceneRect.top;
+  const centerFromSceneLeft = cardRect.left + cardRect.width / 2 - sceneRect.left;
+  scene.style.setProperty("--peek-top", `${anchorFromSceneTop}px`);
+  scene.style.setProperty("--peek-left", `${centerFromSceneLeft}px`);
 }
 
 function runPeekAnchorSync(durationMs) {
@@ -109,7 +112,7 @@ function startContinuousPeekAnchorSync() {
   if (peekAnchorIntervalId !== null) return;
   peekAnchorIntervalId = window.setInterval(() => {
     updatePeekabooTarget();
-  }, 160);
+  }, 120);
 }
 
 function setInstruction(text) {
@@ -249,6 +252,13 @@ if (peekabooImage) {
 }
 
 updatePeekabooTarget();
+
+if ("ResizeObserver" in window) {
+  cardResizeObserver = new ResizeObserver(() => {
+    updatePeekabooTarget();
+  });
+  cardResizeObserver.observe(card);
+}
 
 window.addEventListener("resize", () => {
   updatePeekabooTarget();
