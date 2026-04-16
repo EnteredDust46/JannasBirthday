@@ -28,9 +28,6 @@ let flapStartY = 0;
 let flapBaseProgress = 0;
 let flapProgress = 0;
 let seamTotalLength = 0;
-let peekSyncRaf = null;
-let peekSyncUntil = 0;
-let peekAnchorIntervalId = null;
 let cardResizeObserver = null;
 
 function distanceToSegment(px, py, x1, y1, x2, y2) {
@@ -79,37 +76,47 @@ function setSeamProgress(value) {
   seamProgress.style.strokeDashoffset = String((1 - clamped) * seamTotalLength);
 }
 
+let peekabooAnimStart = null;
+const PEEK_CYCLE_MS = 35000;
+
+function easeInOut(t) {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
+
+function getPeekProgress(elapsed) {
+  const t = (elapsed % PEEK_CYCLE_MS) / PEEK_CYCLE_MS;
+  if (t <= 0.2857) {
+    return easeInOut(t / 0.2857) * 0.98;
+  } else if (t <= 0.4286) {
+    return 0.98;
+  } else if (t <= 0.7143) {
+    return 0.98 * (1 - easeInOut((t - 0.4286) / 0.2857));
+  }
+  return 0;
+}
+
 function updatePeekabooTarget() {
   if (!card || !peekabooLane) return;
   const cardRect = card.getBoundingClientRect();
-  peekabooLane.style.top = `${cardRect.bottom}px`;
-  peekabooLane.style.left = `${cardRect.left + cardRect.width / 2}px`;
+  const laneH = peekabooLane.offsetHeight;
+
+  if (peekabooAnimStart !== null) {
+    const progress = getPeekProgress(performance.now() - peekabooAnimStart);
+    const top = cardRect.bottom - laneH + progress * laneH;
+    peekabooLane.style.top = `${top}px`;
+  } else {
+    peekabooLane.style.top = `${cardRect.bottom - laneH}px`;
+  }
 }
 
-function runPeekAnchorSync(durationMs) {
-  if (!peekabooLane) return;
-  peekSyncUntil = performance.now() + durationMs;
-  if (peekSyncRaf !== null) {
-    cancelAnimationFrame(peekSyncRaf);
-  }
-
+function startPeekabooAnimation() {
+  scene.classList.add("peekaboo-active");
+  peekabooAnimStart = performance.now();
   const tick = () => {
     updatePeekabooTarget();
-    if (performance.now() < peekSyncUntil) {
-      peekSyncRaf = requestAnimationFrame(tick);
-    } else {
-      peekSyncRaf = null;
-    }
+    requestAnimationFrame(tick);
   };
-
-  peekSyncRaf = requestAnimationFrame(tick);
-}
-
-function startContinuousPeekAnchorSync() {
-  if (peekAnchorIntervalId !== null) return;
-  peekAnchorIntervalId = window.setInterval(() => {
-    updatePeekabooTarget();
-  }, 120);
+  requestAnimationFrame(tick);
 }
 
 function setInstruction(text) {
@@ -138,11 +145,9 @@ function completeFlapLift() {
 
   window.setTimeout(() => {
     envelope.classList.add("revealed");
-    runPeekAnchorSync(4200);
+    updatePeekabooTarget();
     window.setTimeout(() => {
-      updatePeekabooTarget();
-      scene.classList.add("peekaboo-active");
-      startContinuousPeekAnchorSync();
+      startPeekabooAnimation();
     }, 3000);
     setInstruction("Happy Birthday, Mom.");
     phase = PHASE.DONE;
@@ -260,4 +265,15 @@ if ("ResizeObserver" in window) {
 window.addEventListener("resize", () => {
   updatePeekabooTarget();
 });
+
+/* DEBUG: skip to reveal */
+const dbgBtn = document.createElement("button");
+dbgBtn.textContent = "DBG: Skip to reveal";
+dbgBtn.style.cssText = "position:fixed;top:4px;right:4px;z-index:9999;padding:6px 12px;font-size:14px;cursor:pointer;background:#f0f;color:#fff;border:none;border-radius:4px;";
+dbgBtn.addEventListener("click", () => {
+  completeTear();
+  setTimeout(() => completeFlapLift(), 200);
+  dbgBtn.remove();
+});
+document.body.appendChild(dbgBtn);
 
