@@ -275,13 +275,13 @@ body {
 .peekaboo {
   position: absolute;
   left: 50%;
-  top: calc(100% + 12px);
+  top: var(--peek-anchor, 100%);
   width: clamp(180px, 33vw, 290px);
   height: auto;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -95%);
   opacity: 0;
   pointer-events: none;
-  z-index: 20;
+  z-index: 10;
 }
 
 .scene.peekaboo-active .peekaboo {
@@ -291,19 +291,19 @@ body {
 
 @keyframes peekaboo-cycle {
   0% {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -95%);
   }
   28.57% {
-    transform: translate(-50%, var(--peek-rise, -220px));
+    transform: translate(-50%, -5%);
   }
   42.86% {
-    transform: translate(-50%, var(--peek-rise, -220px));
+    transform: translate(-50%, -5%);
   }
   71.43% {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -95%);
   }
   100% {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -95%);
   }
 }
 

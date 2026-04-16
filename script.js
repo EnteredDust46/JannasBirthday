@@ -78,8 +78,8 @@ function updatePeekabooTarget() {
   if (!scene || !card || !peekabooImage) return;
   const sceneRect = scene.getBoundingClientRect();
   const cardRect = card.getBoundingClientRect();
-  const targetTop = cardRect.bottom - sceneRect.bottom;
-  scene.style.setProperty("--peek-rise", `${Math.min(0, targetTop)}px`);
+  const anchorFromSceneTop = cardRect.bottom - sceneRect.top;
+  scene.style.setProperty("--peek-anchor", `${anchorFromSceneTop}px`);
 }
 
 function setInstruction(text) {
