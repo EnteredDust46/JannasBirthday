@@ -275,7 +275,7 @@ body {
 .peekaboo-lane {
   position: absolute;
   left: 50%;
-  top: var(--peek-anchor, 100%);
+  top: 0;
   width: clamp(180px, 33vw, 290px);
   aspect-ratio: 433 / 577;
   transform: translateX(-50%);
@@ -283,6 +283,7 @@ body {
   opacity: 0;
   pointer-events: none;
   z-index: 6;
+  will-change: top;
 }
 
 .peekaboo {

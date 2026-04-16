@@ -3,8 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Happy Birthday Mom</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260416d" />
   </head>
   <body>
     <main class="scene" id="scene">
@@ -65,20 +71,20 @@
             </div>
             <div class="tear-zone" id="tearZone" aria-label="Tear line" role="button"></div>
           </div>
+
+          <div class="peekaboo-lane" id="peekabooLane" aria-hidden="true">
+            <img
+              class="peekaboo"
+              id="peekabooImage"
+              src="assets/mom-peek.png?v=20260416d"
+              alt="Mom peekaboo"
+              aria-hidden="true"
+            />
+          </div>
         </div>
       </section>
-
-      <div class="peekaboo-lane" id="peekabooLane" aria-hidden="true">
-        <img
-          class="peekaboo"
-          id="peekabooImage"
-          src="assets/mom-peek.png"
-          alt="Mom peekaboo"
-          aria-hidden="true"
-        />
-      </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20260416d"></script>
   </body>
 </html>

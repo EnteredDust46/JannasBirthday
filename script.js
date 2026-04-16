@@ -28,6 +28,8 @@ let flapStartY = 0;
 let flapBaseProgress = 0;
 let flapProgress = 0;
 let seamTotalLength = 0;
+let peekSyncRaf = null;
+let peekSyncUntil = 0;
 
 function distanceToSegment(px, py, x1, y1, x2, y2) {
   const dx = x2 - x1;
@@ -77,10 +79,29 @@ function setSeamProgress(value) {
 
 function updatePeekabooTarget() {
   if (!scene || !card || !peekabooImage || !peekabooLane) return;
-  const sceneRect = scene.getBoundingClientRect();
+  const envelopeRect = envelope.getBoundingClientRect();
   const cardRect = card.getBoundingClientRect();
-  const anchorFromSceneTop = cardRect.bottom - sceneRect.top;
-  scene.style.setProperty("--peek-anchor", `${anchorFromSceneTop}px`);
+  const anchorFromEnvelopeTop = cardRect.bottom - envelopeRect.top;
+  peekabooLane.style.top = `${anchorFromEnvelopeTop}px`;
+}
+
+function runPeekAnchorSync(durationMs) {
+  if (!peekabooLane) return;
+  peekSyncUntil = performance.now() + durationMs;
+  if (peekSyncRaf !== null) {
+    cancelAnimationFrame(peekSyncRaf);
+  }
+
+  const tick = () => {
+    updatePeekabooTarget();
+    if (performance.now() < peekSyncUntil) {
+      peekSyncRaf = requestAnimationFrame(tick);
+    } else {
+      peekSyncRaf = null;
+    }
+  };
+
+  peekSyncRaf = requestAnimationFrame(tick);
 }
 
 function setInstruction(text) {
@@ -109,13 +130,9 @@ function completeFlapLift() {
 
   window.setTimeout(() => {
     envelope.classList.add("revealed");
-    requestAnimationFrame(() => {
-      updatePeekabooTarget();
-    });
+    runPeekAnchorSync(4200);
     window.setTimeout(() => {
       updatePeekabooTarget();
-    }, 1500);
-    window.setTimeout(() => {
       scene.classList.add("peekaboo-active");
     }, 3000);
     setInstruction("Happy Birthday, Mom.");
@@ -217,10 +234,13 @@ const seamGuideLength = seamProgress.getTotalLength();
 seamTotalLength = seamGuideLength;
 seamProgress.style.strokeDasharray = String(seamTotalLength);
 setSeamProgress(0);
+
+if (peekabooImage) {
+  peekabooImage.src = `assets/mom-peek.png?cb=${Date.now()}`;
+}
+
 updatePeekabooTarget();
 
 window.addEventListener("resize", () => {
-  if (phase === PHASE.DONE) {
-    updatePeekabooTarget();
-  }
+  updatePeekabooTarget();
 });
