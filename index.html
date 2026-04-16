@@ -7,19 +7,15 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="scene">
+    <main class="scene" id="scene">
       <h1 class="title">Happy Birthday, Mom</h1>
-      <p class="subtitle" id="instruction">Drag across the top edge to tear the envelope</p>
+      <p class="subtitle" id="instruction">Drag along the flap seam to tear the envelope</p>
 
       <section class="envelope-wrap">
-        <div class="envelope" id="envelope">
-          <div class="tear-zone" id="tearZone" aria-label="Tear line" role="button"></div>
+        <div class="envelope" id="envelope" aria-live="polite">
+          <div class="light-burst" id="lightBurst" aria-hidden="true"></div>
 
-          <div class="envelope-back"></div>
-          <div class="envelope-pocket"></div>
-          <div class="envelope-flap" id="flap"></div>
-
-          <article class="card" id="card" aria-live="polite">
+          <article class="card" id="card">
             <p>
               Happy Birthday Mom! Congratulations on being 46 years young! Baby yoda was 50 in the mandalorian, and I would say you guys have it about the same in terms of your youthful appearances, so 46 checks out.
             </p>
@@ -37,10 +33,48 @@
             <p>_________________________</p>
             <p>P.S. This is the first thing I have written without AI in like a year.</p>
           </article>
+
+          <div class="envelope-body" id="envelopeBody">
+            <div class="envelope-back"></div>
+
+            <div class="envelope-front"></div>
+            <div class="envelope-flap" id="flap"></div>
+            <div
+              class="flap-handle"
+              id="flapHandle"
+              aria-label="Pull flap up"
+              role="button"
+            ></div>
+            <div class="seam-track" aria-hidden="true">
+              <svg
+                class="seam-svg"
+                id="seamSvg"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+              >
+                <polyline
+                  class="seam-base"
+                  points="1,1 50,64 99,1"
+                ></polyline>
+                <polyline
+                  class="seam-progress"
+                  id="seamProgress"
+                  points="1,1 50,64 99,1"
+                ></polyline>
+              </svg>
+            </div>
+            <div class="tear-zone" id="tearZone" aria-label="Tear line" role="button"></div>
+          </div>
         </div>
       </section>
 
-      <button class="action-btn" id="openBtn" disabled>Open Envelope</button>
+      <img
+        class="peekaboo"
+        id="peekabooImage"
+        src="assets/mom-peek.png"
+        alt="Mom peekaboo"
+        aria-hidden="true"
+      />
     </main>
 
     <script src="script.js"></script>
