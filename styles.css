@@ -28,7 +28,7 @@ body {
   text-align: center;
   padding: 24px 16px 32px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .title {
@@ -183,17 +183,16 @@ body {
 .card {
   position: absolute;
   left: 50%;
-  bottom: 10%;
+  top: 50%;
   width: 82%;
   height: 76%;
-  transform: translateX(-50%) translateY(84%);
+  transform: translate(-50%, 20%);
   border-radius: 12px;
   background: var(--paper);
   padding: clamp(14px, 3vw, 28px);
   text-align: left;
   box-shadow: 0 8px 18px rgba(53, 30, 40, 0.12);
-  transition: transform 1.05s cubic-bezier(0.19, 0.82, 0.25, 1),
-    box-shadow 0.8s ease, opacity 0.35s ease;
+  transition: all 1.05s cubic-bezier(0.19, 0.82, 0.25, 1);
   z-index: 2;
   overflow-y: auto;
   opacity: 0;
@@ -212,9 +211,12 @@ body {
 }
 
 .envelope.revealed .card {
+  position: fixed;
+  left: 50%;
+  top: 24px;
   width: min(86vw, 780px);
-  height: min(84vh, 760px);
-  transform: translateX(-50%) translateY(-46%);
+  height: calc(100vh - 260px);
+  transform: translate(-50%, 0);
   box-shadow: 0 16px 30px rgba(53, 30, 40, 0.22);
   opacity: 1;
   pointer-events: auto;
@@ -275,17 +277,16 @@ body {
 }
 
 .peekaboo-lane {
-  position: absolute;
-  left: var(--peek-left, 50%);
-  top: var(--peek-top, 100%);
+  position: fixed;
+  left: 50%;
+  top: calc(100vh - 24px);
   width: clamp(180px, 33vw, 290px);
   aspect-ratio: 433 / 577;
   transform: translateX(-50%);
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  z-index: 20;
-  will-change: top, left;
+  z-index: 30;
 }
 
 .peekaboo {

@@ -80,13 +80,10 @@ function setSeamProgress(value) {
 }
 
 function updatePeekabooTarget() {
-  if (!scene || !card || !peekabooImage || !peekabooLane) return;
-  const sceneRect = scene.getBoundingClientRect();
+  if (!card || !peekabooLane) return;
   const cardRect = card.getBoundingClientRect();
-  const anchorFromSceneTop = cardRect.bottom - sceneRect.top;
-  const centerFromSceneLeft = cardRect.left + cardRect.width / 2 - sceneRect.left;
-  scene.style.setProperty("--peek-top", `${anchorFromSceneTop}px`);
-  scene.style.setProperty("--peek-left", `${centerFromSceneLeft}px`);
+  peekabooLane.style.top = `${cardRect.bottom}px`;
+  peekabooLane.style.left = `${cardRect.left + cardRect.width / 2}px`;
 }
 
 function runPeekAnchorSync(durationMs) {
@@ -263,3 +260,4 @@ if ("ResizeObserver" in window) {
 window.addEventListener("resize", () => {
   updatePeekabooTarget();
 });
+
