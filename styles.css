@@ -217,7 +217,7 @@ body {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
-  z-index: 12;
+  z-index: 40;
   transition-delay: 0.18s;
 }
 
@@ -282,7 +282,7 @@ body {
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  z-index: 10;
+  z-index: 6;
 }
 
 .peekaboo {
@@ -306,10 +306,10 @@ body {
     transform: translateY(100%);
   }
   28.57% {
-    transform: translateY(5%);
+    transform: translateY(2%);
   }
   42.86% {
-    transform: translateY(5%);
+    transform: translateY(2%);
   }
   71.43% {
     transform: translateY(100%);

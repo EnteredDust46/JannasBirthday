@@ -115,7 +115,9 @@ function completeFlapLift() {
     window.setTimeout(() => {
       updatePeekabooTarget();
     }, 1500);
-    scene.classList.add("peekaboo-active");
+    window.setTimeout(() => {
+      scene.classList.add("peekaboo-active");
+    }, 3000);
     setInstruction("Happy Birthday, Mom.");
     phase = PHASE.DONE;
   }, 140);
